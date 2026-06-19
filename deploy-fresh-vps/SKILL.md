@@ -11,6 +11,8 @@ Provision a fresh VPS as a guided, reversible workflow. The core rule is: never 
 
 This skill is a wizard, not a one-shot script. After each major phase, report what changed, what was verified, where secrets/configs were saved, and what comes next.
 
+The final user-facing deliverable is a single Markdown handbook named `VPS-使用说明.md` in the user-approved local directory. Technical exports, runbooks, JSON summaries, and verification notes are agent-facing intermediate artifacts unless the user explicitly asks to inspect them.
+
 For concrete command templates and verification snippets, read `references/command-patterns.md` when execution begins.
 
 ## Operating Rules
@@ -19,8 +21,11 @@ For concrete command templates and verification snippets, read `references/comma
 - Keep one working SSH session open while changing SSH or firewall rules.
 - Prefer reversible drop-in config plus backups over overwriting system files.
 - Redact secrets in chat: passwords, UUIDs, Reality private keys, panel credentials, subscription tokens.
-- Store user-facing credentials and generated client configs only in the user-approved local directory.
-- Do not paste secrets into final answers. Link local files and summarize contents.
+- Store user-facing credentials, generated client configs, and the final handbook only in the user-approved local directory.
+- Treat intermediate files as private working files. Do not present a pile of technical artifacts to a nontechnical user as the final result.
+- Collect handoff data into a local `deployment-summary.json` with restrictive permissions, then render `VPS-使用说明.md` with `scripts/render-user-handbook.py`.
+- Do not `cat`, paste, or summarize secret values from `deployment-summary.json` or `VPS-使用说明.md` in chat. Verify the final handbook by file existence, size, and headings only.
+- In the final answer, link the handbook and state that it contains sensitive information the user must save securely.
 - Do not assume 3x-ui install commands, distro package names, or service names are current. Verify them at run time from official sources or the target machine.
 - If a verification gate fails, stop and debug before continuing.
 
@@ -38,13 +43,14 @@ Start by showing the user this plan in concise form:
 6. Configure direct panel access by `IP:port/path` and optional direct subscription access.
 7. Create a VLESS/Reality inbound and client.
 8. Export local client files and verify server/client-facing configuration.
+9. Generate one user-readable `VPS-使用说明.md` containing panel login, SSH connection, inbound/client, and troubleshooting instructions.
 
 Ask for or confirm:
 
 - Initial host/IP, login user, and temporary credential method.
 - Preferred local SSH identity file, or permission to generate one.
 - Desired SSH alias, for example `vps-us-1`.
-- Local storage directory for runbook, SSH alias notes, panel credentials, and client exports.
+- Local storage directory for the final handbook, private JSON summary, runbook, SSH alias notes, panel credentials, and client exports.
 - Whether to expose the 3x-ui panel directly on a random high port, restrict it to specific source IPs, or keep it private behind an SSH tunnel.
 - Whether to enable direct subscription access, and which random high port/path to use.
 - Whether the VLESS client should use the bare VPS IP or a user-provided DNS-only hostname.
@@ -189,7 +195,7 @@ Gate before continuing:
 - Client UUID, flow, Reality public key, SNI/serverName, short ID, and target server value are present.
 - UFW permits the intended client path.
 
-### Phase 7: Local Client Export
+### Phase 7: Local Technical Export
 
 Create a local export file in the approved directory containing:
 
@@ -212,6 +218,34 @@ Gate before completion:
 - Subscription endpoint returns a valid config if subscription is enabled.
 - Server-side config and listeners still match the export.
 
+### Phase 8: Final User Handbook
+
+Generate one Markdown handbook for the user. This is the primary deliverable.
+
+Before rendering, write `deployment-summary.json` in the approved directory with restrictive permissions. Include the fields the user will need later:
+
+- 3x-ui panel URL, username, password, access route, panel port/path, and service state.
+- Configured inbound rule: remark, protocol, port, transport, security, flow, Reality SNI/serverName, public key, short ID, and route.
+- Configured client rule: client label, enabled state, server value, `vless://` URI, subscription URL if enabled, and local client export paths.
+- VPS server access: SSH alias, command, host/IP, user, port, identity file path, password-login state, and hostname/OS.
+- Firewall summary and changed services.
+- Troubleshooting prompt telling the user to attach this handbook when asking another assistant for help.
+
+Render the handbook with `scripts/render-user-handbook.py`. Do not print the JSON or generated Markdown to chat or terminal logs. Use verification commands that avoid exposing secrets.
+
+The handbook must be written for a nontechnical user and must clearly say:
+
+1. The 3x-ui panel service has been deployed, how to log in, and what inbound/client rules were configured.
+2. What changed on the VPS, what the current SSH/firewall configuration is, and how to connect to the server.
+3. What to do if there is a problem: continue in the current chat, or send another assistant a short troubleshooting request together with this handbook.
+
+Gate before completion:
+
+- `VPS-使用说明.md` exists in the approved directory and is non-empty.
+- The handbook headings are present.
+- The handbook was generated from `deployment-summary.json`, not manually assembled in chat.
+- The final answer links only the handbook and does not duplicate sensitive values.
+
 ## Progress Updates
 
 Use this format after every major phase:
@@ -229,12 +263,9 @@ Need from you: <only if blocked or a decision is required>
 End with:
 
 - SSH alias command, for example `ssh <alias>`.
-- Remote OS and hostname.
-- SSH port and auth state.
-- Firewall summary.
-- 3x-ui panel access route, with credentials stored in local file only.
-- VLESS inbound summary.
-- Client export file link.
-- Remaining risks: root password rotation, provider firewall/security group, exposed panel hardening, backup/restore notes.
+- Final handbook link: `VPS-使用说明.md`.
+- A reminder that the handbook contains sensitive panel login and client connection information.
+- Redacted confirmation that SSH, firewall, 3x-ui panel, inbound/client, and local exports were verified.
+- Remaining risks only if applicable: root password rotation, provider firewall/security group, exposed panel hardening, backup/restore notes.
 
 Do not claim the deployment is complete unless every gate has been verified.

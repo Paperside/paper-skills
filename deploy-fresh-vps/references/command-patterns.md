@@ -268,6 +268,92 @@ for path in sys.argv[1:]:
 PY
 ```
 
+## Final User Handbook
+
+Create the final handoff from a local JSON summary. This JSON contains secrets, so keep it in the user-approved directory with restrictive permissions and do not print it.
+
+Minimal shape:
+
+```json
+{
+  "generated_at": "<ISO-8601 timestamp>",
+  "server": {
+    "host_ip": "<host-ip>",
+    "hostname": "<remote-hostname>",
+    "os": "<remote-os>",
+    "ssh_alias": "<ssh-alias>",
+    "ssh_user": "<ssh-user>",
+    "ssh_port": "<ssh-port>",
+    "identity_file": "<private-key-path>",
+    "ssh_command": "ssh <ssh-alias>",
+    "password_auth": "disabled"
+  },
+  "firewall": {
+    "enabled": true,
+    "rules": [
+      "allow <ssh-port>/tcp for SSH",
+      "allow 443/tcp for VLESS Reality",
+      "allow <panel-port>/tcp for 3x-ui panel"
+    ]
+  },
+  "panel": {
+    "url": "https://<host-ip>:<panel-port>/<panel-path>",
+    "username": "<panel-username>",
+    "password": "<panel-password>",
+    "port": "<panel-port>",
+    "path": "<panel-path>",
+    "access": "direct IP, random high port, random path",
+    "service_status": "active"
+  },
+  "inbound": {
+    "remark": "<inbound-remark>",
+    "protocol": "VLESS",
+    "port": 443,
+    "transport": "TCP/RAW",
+    "security": "Reality",
+    "flow": "xtls-rprx-vision",
+    "server_name": "<sni>",
+    "public_key": "<reality-public-key>",
+    "short_id": "<reality-short-id>",
+    "route": "bare VPS IP"
+  },
+  "client": {
+    "name": "<client-label>",
+    "enabled": true,
+    "server": "<host-ip>",
+    "vless_uri": "<vless-uri>",
+    "export_file": "<local-client-export-file>",
+    "mihomo_file": "<local-mihomo-yaml-or-empty>",
+    "subscription_url": "<subscription-url-or-empty>"
+  },
+  "files": {
+    "technical_runbook": "<local-runbook-file>",
+    "client_export": "<local-client-export-file>",
+    "handoff_doc": "<local-final-handbook>"
+  },
+  "verification": {
+    "ssh": "ssh <ssh-alias> works with public key only",
+    "panel": "3x-ui panel reachable by direct IP URL",
+    "inbound": "443 is listening and config matches export",
+    "client_export": "client export file exists and was validated"
+  }
+}
+```
+
+Render without exposing contents:
+
+```bash
+SUMMARY_FILE="<approved-dir>/deployment-summary.json"
+FINAL_DOC="<approved-dir>/VPS-使用说明.md"
+chmod 600 "$SUMMARY_FILE"
+python3 <skill-dir>/scripts/render-user-handbook.py --input "$SUMMARY_FILE" --output "$FINAL_DOC"
+chmod 600 "$FINAL_DOC"
+test -s "$FINAL_DOC"
+rg -n '^(#|##) ' "$FINAL_DOC"
+```
+
+Only the heading check should be printed. Do not print the final handbook itself unless the user explicitly asks to reveal the sensitive values in chat.
+
 ## Known Good Shape
 
 The previously successful deployment used:

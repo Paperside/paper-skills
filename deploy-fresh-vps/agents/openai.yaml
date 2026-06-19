@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deploy Fresh VPS"
+  short_description: "Guided SSH, UFW, and 3x-ui VPS setup"
+  default_prompt: "Use $deploy-fresh-vps to guide a fresh VPS setup from first SSH login through 3x-ui and VLESS client export."

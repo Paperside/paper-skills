@@ -1,0 +1,4 @@
+interface:
+  display_name: "Browser Runtime Analysis"
+  short_description: "Analyze browser runtime facts efficiently"
+  default_prompt: "Use $browser-runtime-analysis to inspect browser requests, DOM, console, visual state, or frontend behavior."

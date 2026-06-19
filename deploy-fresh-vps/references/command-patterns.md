@@ -336,6 +336,9 @@ Minimal shape:
     "panel": "3x-ui panel reachable by direct IP URL",
     "inbound": "443 is listening and config matches export",
     "client_export": "client export file exists and was validated"
+  },
+  "troubleshooting": {
+    "problem_placeholder": "<describe the issue here>"
   }
 }
 ```
@@ -353,6 +356,8 @@ rg -n '^(#|##) ' "$FINAL_DOC"
 ```
 
 Only the heading check should be printed. Do not print the final handbook itself unless the user explicitly asks to reveal the sensitive values in chat.
+
+The generated troubleshooting section must provide a copyable, sanitized request for another assistant. It should include basic connection facts only: VPS IP/host, SSH user, SSH port, SSH alias, identity-file path, SSH command, OS/hostname, and that 3x-ui is deployed. It must not ask the user to attach the whole handbook by default, and it must not include panel passwords, client import URIs, UUIDs, Reality keys, or subscription tokens.
 
 ## Known Good Shape
 

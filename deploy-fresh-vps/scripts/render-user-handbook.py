@@ -63,16 +63,39 @@ def generated_at(data: dict[str, Any]) -> str:
     return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
 
 
+def safe_help_request(data: dict[str, Any]) -> str:
+    problem = get(
+        data,
+        "troubleshooting.problem_placeholder",
+        "<请在这里描述具体现象、报错、发生时间和你刚刚做过的操作>",
+    )
+    ssh_alias = get(data, "server.ssh_alias")
+    ssh_command = get(data, "server.ssh_command", f"ssh {ssh_alias}")
+    lines = [
+        f"我的 VPS 现在出现了问题：{problem}",
+        "请帮助我排查。你可以先基于下面这些非密码信息判断下一步需要检查什么：",
+        "",
+        f"- VPS IP/主机: {text(get(data, 'server.host_ip'))}",
+        f"- SSH 用户: {text(get(data, 'server.ssh_user'))}",
+        f"- SSH 端口: {text(get(data, 'server.ssh_port'))}",
+        f"- SSH alias: {text(get(data, 'server.ssh_alias'))}",
+        f"- 本地私钥路径: {text(get(data, 'server.identity_file'))}",
+        f"- 推荐连接命令: {text(ssh_command)}",
+        f"- 系统版本: {text(get(data, 'server.os'))}",
+        f"- 远端主机名: {text(get(data, 'server.hostname'))}",
+        "- 已部署服务: 3x-ui；通过 3x-ui 管理代理入站和客户端",
+        "",
+        "我没有在这条求助消息里提供 3x-ui 面板密码、客户端导入链接、UUID、Reality 密钥、订阅 token 或完整说明文档。如确实需要某一项敏感信息，请先说明需要哪一项以及原因。",
+    ]
+    return "\n".join(lines)
+
+
 def render(data: dict[str, Any]) -> str:
     panel_url = get(data, "panel.url")
     panel_username = get(data, "panel.username")
     panel_password = get(data, "panel.password")
     ssh_command = get(data, "server.ssh_command", f"ssh {get(data, 'server.ssh_alias')}")
-    troubleshoot_prompt = get(
-        data,
-        "troubleshooting.assistant_prompt",
-        "我的VPS现在出现了问题：<请在这里描述你遇到的问题>。请帮助我排查。下面是这台 VPS 的部署说明文档，请结合文档里的 SSH、3x-ui、入站和客户端配置来判断问题。",
-    )
+    troubleshoot_prompt = safe_help_request(data)
 
     lines: list[str] = [
         "# VPS 使用说明（请妥善保存）",
@@ -175,11 +198,11 @@ def render(data: dict[str, Any]) -> str:
         "",
         "## 7. 如果有疑问或出现问题",
         "",
-        "你可以继续在当前聊天里提问。也可以把下面这段话发给你的智能助手，并把这份文档一起发送过去:",
+        "你可以继续在当前聊天里提问。如果要找另一个智能助手排查，不要默认把整份文档发出去。可以先复制下面这段已避开敏感值的求助信息:",
         "",
         *code_block(troubleshoot_prompt),
         "",
-        "发送给其他人或其他智能助手前，请确认你信任对方，因为这份文档里包含可以登录面板和使用客户端的敏感信息。",
+        "只有当你确认对方可信、并且对方明确说明需要哪一项以及原因时，再单独提供面板密码、客户端导入链接、UUID、Reality 参数等敏感信息。",
         "",
     ]
     return "\n".join(lines)

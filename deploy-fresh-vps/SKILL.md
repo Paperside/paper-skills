@@ -229,7 +229,7 @@ Before rendering, write `deployment-summary.json` in the approved directory with
 - Configured client rule: client label, enabled state, server value, `vless://` URI, subscription URL if enabled, and local client export paths.
 - VPS server access: SSH alias, command, host/IP, user, port, identity file path, password-login state, and hostname/OS.
 - Firewall summary and changed services.
-- Troubleshooting prompt telling the user to attach this handbook when asking another assistant for help.
+- A sanitized troubleshooting prompt for another assistant. It may include VPS IP/host, SSH user, SSH port, SSH alias, local identity-file path, SSH command, OS/hostname, and that 3x-ui is deployed. It must not tell the user to attach the full handbook by default and must not include panel password, client URI, UUID, Reality key material, or subscription tokens.
 
 Render the handbook with `scripts/render-user-handbook.py`. Do not print the JSON or generated Markdown to chat or terminal logs. Use verification commands that avoid exposing secrets.
 
@@ -237,7 +237,7 @@ The handbook must be written for a nontechnical user and must clearly say:
 
 1. The 3x-ui panel service has been deployed, how to log in, and what inbound/client rules were configured.
 2. What changed on the VPS, what the current SSH/firewall configuration is, and how to connect to the server.
-3. What to do if there is a problem: continue in the current chat, or send another assistant a short troubleshooting request together with this handbook.
+3. What to do if there is a problem: continue in the current chat, or send another assistant the sanitized troubleshooting prompt without sharing the full handbook by default.
 
 Gate before completion:
 

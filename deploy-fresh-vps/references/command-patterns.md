@@ -171,7 +171,8 @@ From local machine:
 ```bash
 nc -vz <host-ip> 443
 nc -vz <host-ip> <panel-port>
-curl -kI --connect-timeout 10 https://<host-ip>:<panel-port>/<panel-path>
+PANEL_URL="<actual-panel-scheme>://<host-ip>:<panel-port>/<panel-path>"
+curl -kI --connect-timeout 10 "$PANEL_URL"
 ```
 
 Panel/subscription direct IP access should match the chosen policy: reachable if public, blocked if trusted-source or tunnel-only.
@@ -224,7 +225,7 @@ Flow: xtls-rprx-vision
 Client count: 1 enabled client
 Client label/email: <ssh-alias>-client-1
 Client server: bare VPS IP by default
-Panel access: https://<host-ip>:<panel-port>/<panel-path>
+Panel access: <actual-panel-scheme>://<host-ip>:<panel-port>/<panel-path>
 ```
 
 Reality-specific values:
@@ -297,12 +298,11 @@ Minimal shape:
     ]
   },
   "panel": {
-    "url": "https://<host-ip>:<panel-port>/<panel-path>",
+    "url": "<actual-panel-scheme>://<host-ip>:<panel-port>/<panel-path>",
     "username": "<panel-username>",
     "password": "<panel-password>",
     "port": "<panel-port>",
     "path": "<panel-path>",
-    "access": "direct IP, random high port, random path",
     "service_status": "active"
   },
   "inbound": {

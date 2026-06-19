@@ -111,7 +111,6 @@ def render(data: dict[str, Any]) -> str:
         bullet("面板链接", panel_url),
         bullet("用户名", panel_username),
         bullet("密码", panel_password),
-        bullet("访问方式", get(data, "panel.access")),
         bullet("面板端口", get(data, "panel.port")),
         bullet("面板路径", get(data, "panel.path")),
         bullet("服务状态", get(data, "panel.service_status")),

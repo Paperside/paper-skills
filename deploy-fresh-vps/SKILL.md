@@ -224,7 +224,7 @@ Generate one Markdown handbook for the user. This is the primary deliverable.
 
 Before rendering, write `deployment-summary.json` in the approved directory with restrictive permissions. Include the fields the user will need later:
 
-- 3x-ui panel URL, username, password, access route, panel port/path, and service state.
+- 3x-ui panel URL, username, password, panel port/path, and service state. Use the actual verified scheme (`http` or `https`) from the deployed panel; do not assume TLS is enabled.
 - Configured inbound rule: remark, protocol, port, transport, security, flow, Reality SNI/serverName, public key, short ID, and route.
 - Configured client rule: client label, enabled state, server value, `vless://` URI, subscription URL if enabled, and local client export paths.
 - VPS server access: SSH alias, command, host/IP, user, port, identity file path, password-login state, and hostname/OS.

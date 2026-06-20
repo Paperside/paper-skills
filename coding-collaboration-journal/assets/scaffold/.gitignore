@@ -1,0 +1,6 @@
+.journal/state/tmp/
+.journal/state/run.lock
+.journal/state/logs/*.log
+__pycache__/
+*.pyc
+.DS_Store

@@ -1,0 +1,25 @@
+interface:
+  display_name: "Coding Collaboration Journal"
+  short_description: "Build a self-running Codex and Claude work journal"
+  default_prompt: "Use $coding-collaboration-journal to install a Git-backed daily collaboration journal for my Codex and Claude Code work, guide me through the few required choices, validate it, and deploy the scheduler."
+
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual-and-scheduled"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "python3"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-research-with-citations"
+  degradation:
+    openai: "native-skill-plus-codex-automation"
+    claude: "native-skill-plus-hooks-or-scheduled-task"
+    generic: "skill-source-plus-system-scheduler"

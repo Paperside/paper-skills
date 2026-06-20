@@ -1,0 +1,4 @@
+interface:
+  display_name: "Coding Collaboration Journal"
+  short_description: "Build a self-running Codex and Claude work journal"
+  default_prompt: "Use $coding-collaboration-journal to install or operate an evidence-linked, Git-backed daily collaboration journal for Codex and Claude Code."

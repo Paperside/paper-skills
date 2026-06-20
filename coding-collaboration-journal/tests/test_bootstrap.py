@@ -59,8 +59,13 @@ class BootstrapTests(unittest.TestCase):
             self.assertIn('level = "Low"', (output / ".journal" / "config.toml").read_text())
             config_text = (output / ".journal" / "config.toml").read_text()
             self.assertIn("[memory]", config_text)
-            self.assertIn("inject_on_session_start = true", config_text)
+            self.assertIn("auto_update = true", config_text)
+            self.assertIn("status = \"beta\"", config_text)
+            self.assertIn("inject_on_session_start = false", config_text)
             self.assertIn("briefing_char_limit = 6000", config_text)
+            self.assertIn("briefing_hard_limit = 10000", config_text)
+            self.assertTrue((output / "memory" / "candidates.yaml").is_file())
+            self.assertTrue((output / "memory" / "session-briefing.md").is_file())
 
             manifest_before = (output / ".journal" / "install-manifest.json").read_bytes()
             scheduler_before = (output / ".journal" / "state" / "scheduler.json").read_bytes()
@@ -135,6 +140,8 @@ class BootstrapTests(unittest.TestCase):
             self.assertIn(".journal/config.toml", daily)
             self.assertIn("docs/method/*", daily)
             self.assertIn("scripts/*", daily)
+            self.assertIn("memory/candidates.yaml", daily)
+            self.assertIn("memory/session-briefing.md", daily)
 
     def isolated_git_env(self, home: Path) -> dict[str, str]:
         env = os.environ.copy()

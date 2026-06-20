@@ -232,10 +232,12 @@ def render_config(args: argparse.Namespace, sources: list[str], runner: str) -> 
         (
             "memory",
             {
+                "status": "beta",
                 "auto_update": True,
                 "write_approval": False,
-                "inject_on_session_start": True,
+                "inject_on_session_start": False,
                 "briefing_char_limit": 6000,
+                "briefing_hard_limit": 10000,
                 "candidate_repeat_threshold": 2,
                 "active_repeat_threshold": 3,
             },

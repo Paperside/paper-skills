@@ -41,6 +41,7 @@ Ask only what remains unresolved:
 | Git sync | auto commit + push | Retry failures; never discard local artifacts. |
 | Git author identity | existing Git identity | Ask only when automatic commits are selected and no effective identity exists; prefer a repository-local override when supplied. |
 | External radar | weekly, targeted | Not a broad daily search. |
+| Session memory injection | disabled | Beta opt-in; daily memory maintenance still runs automatically. |
 | Language | user's language | Keep source identifiers unchanged. |
 
 ## Privacy Explanation
@@ -75,7 +76,7 @@ git_commit = "automatic"
 git_push = "automatic"
 ```
 
-Explain that the system may quietly learn preferences and recurring patterns, but changes to `AGENTS.md`, `CLAUDE.md`, skills, rubric, or scheduler remain proposal-gated by default. The user may choose fully automatic workflow changes, but require a rollback commit and change log.
+Explain that the system may quietly maintain memory candidates, operational memory, and the precomputed session briefing during daily runs. Beta `SessionStart` injection remains off by default and only reads the precomputed briefing when explicitly enabled. Changes to `AGENTS.md`, `CLAUDE.md`, skills, rubric, or scheduler remain proposal-gated by default. The user may choose fully automatic workflow changes, but require a rollback commit and change log.
 
 ## Repository Setup
 
@@ -101,6 +102,7 @@ Report:
 - enabled sources and their smoke-test status;
 - privacy level;
 - scheduler and exact run time;
+- memory maintenance status and whether Beta `SessionStart` injection is enabled;
 - whether computer/app availability is required;
 - latest successful dry-run date and artifact path;
 - Git commit SHA and push status;

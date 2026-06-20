@@ -107,10 +107,15 @@ Follow the analysis rubric. Important distinctions:
 
 ### 9. Update Memory
 
-- refresh project continuity and open loops automatically;
-- update stable preferences only when explicit or repeatedly observed;
-- append pattern evidence and counter-evidence;
-- update experiment observations;
+Memory maintenance happens during the daily run, including the precomputed L3 briefing. Do not defer memory synthesis to the next interactive session.
+
+- treat the dated report and evidence pack as L0 archive;
+- review `memory/candidates.yaml` as the L1 candidate layer;
+- promote, update, merge, reject, or stale candidates with evidence IDs, confidence, `first_seen`, and `last_seen` where applicable;
+- refresh L2 operational memory: project continuity, open loops, stable preferences, pattern evidence/counter-evidence, and experiment observations;
+- regenerate L3 `memory/session-briefing.md` from maintained memory only, even though SessionStart injection is disabled by default;
+- keep `memory/session-briefing.md` at or below `memory.briefing_char_limit` when possible, compact it during the daily run when it grows past that target, and never exceed `memory.briefing_hard_limit`;
+- treat truncation at hook time as a last-resort failure boundary, not normal maintenance;
 - never copy the whole report into memory.
 
 ### 10. Render and Validate

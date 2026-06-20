@@ -30,7 +30,7 @@ AI Collaboration Journal — Daily
 Suggested prompt:
 
 ```text
-Operate this installed journal repository in daily mode. Read .journal/config.toml, AGENTS.md, docs/method/daily-runtime.md, docs/method/report-contract.md, and the generated automation/daily.md. Summarize the previous calendar day in the configured timezone, reconcile the configured recent days, update bounded memory, validate artifacts, and commit and push according to policy. Treat collection errors as incomplete-collection, never as no-activity.
+Operate this installed journal repository in daily mode. Read .journal/config.toml, AGENTS.md, docs/method/daily-runtime.md, docs/method/report-contract.md, and the generated automation/daily.md. Summarize the previous calendar day in the configured timezone, reconcile the configured recent days, update bounded memory, regenerate the precomputed session briefing, validate artifacts, and commit and push according to policy. Treat collection errors as incomplete-collection, never as no-activity.
 ```
 
 Also create weekly and monthly tasks when requested. Keep the daily task responsible for data continuity; weekly/monthly tasks may safely skip when there is no new material.

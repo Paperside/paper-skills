@@ -12,7 +12,7 @@ This is not a prompt for writing a daily summary. It is a local, Git-backed syst
 - Correlates local Git repositories, branches, commits, uncommitted work, test outcomes, documents, and web resources.
 - Generates daily `report.md`, `evidence.json`, and `run.json` artifacts.
 - Distinguishes `no-activity` from `incomplete-collection` instead of treating missing evidence as a quiet day.
-- Maintains bounded memory for user preferences, project continuity, collaboration patterns, experiments, and open loops.
+- Maintains bounded memory for user preferences, project continuity, collaboration patterns, experiments, open loops, memory candidates, and an optional precomputed session briefing.
 - Supports weekly and monthly reviews that compare similar work over time and propose evidence-backed workflow improvements.
 
 ## Design Principles
@@ -61,6 +61,17 @@ my-ai-journal/
 
 The original Skill remains useful for installation, upgrade, repair, migration, and workflow evolution. Routine automation prompts treat the installed repository as the self-contained runtime.
 
+## Memory System And Beta Session Injection
+
+Daily runs maintain the memory system automatically:
+
+- L0: dated reports and evidence packs;
+- L1: `memory/candidates.yaml` for proposed memory changes;
+- L2: operational memory files for preferences, projects, patterns, experiments, and open loops;
+- L3: `memory/session-briefing.md`, a compact briefing regenerated during the daily run.
+
+`SessionStart` injection is Beta and disabled by default. When enabled with `[memory] inject_on_session_start = true`, the hook reads only the precomputed `memory/session-briefing.md`, applies redaction again, and caps it before injection. It does not synthesize memory on demand during interactive work.
+
 ## Install As A Skill
 
 Place the complete `coding-collaboration-journal/` directory in the Skill directory used by your agent environment. For Codex personal skills, this is typically:
@@ -98,6 +109,8 @@ python3 /tmp/my-ai-journal/scripts/validate_journal.py --root /tmp/my-ai-journal
 - Scheduler: Codex Automation when available, with clear local-runtime conditions and a manual smoke test before marking it active.
 - Git: automatic commit by default; push policy follows user configuration.
 - External practice radar: targeted, not broad daily web research.
+- Memory maintenance: automatic during daily runs.
+- Session memory injection: disabled by default; Beta opt-in.
 
 ## Boundaries
 

@@ -13,7 +13,7 @@ This repository is a durable evidence-backed record of the user's work with codi
 - Always include collaboration analysis and evaluation; optional praise/improvement sections require evidence.
 - `no-activity` requires successful collection from every enabled source. Otherwise use `incomplete-collection` or `partial-activity`.
 - Retrieve relevant prior days for continuing work; do not load the whole archive without cause.
-- Update bounded memory, patterns, open loops, and experiments without copying entire transcripts or reports into memory.
+- Update L1 memory candidates, L2 operational memory, and L3 `memory/session-briefing.md` during the daily run without copying entire transcripts or reports into memory.
 - Validate before commit. Preserve local commits when push fails.
 
 ## Autonomy

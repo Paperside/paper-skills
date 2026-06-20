@@ -48,18 +48,14 @@ class CaptureEventTests(unittest.TestCase):
             self.assertEqual(record["event"]["cwd"], "/repo")
             self.assertEqual(record["event"]["api_key"], "[REDACTED_SECRET]")
 
-    def test_session_start_injects_bounded_sanitized_memory(self) -> None:
+    def test_session_start_injects_precomputed_bounded_sanitized_briefing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             journal = Path(tmp)
             self.write_config(journal)
             memory = journal / "memory"
             memory.mkdir()
-            (memory / "user-profile.md").write_text(
-                "# User Collaboration Profile\n\n- Prefer tests before refactors.\n- API_KEY=do-not-inject\n",
-                encoding="utf-8",
-            )
-            (memory / "open-loops.yaml").write_text(
-                "schema_version: 1\nopen_loops:\n  - id: O-1\n    summary: Finish callback migration\n",
+            (memory / "session-briefing.md").write_text(
+                "# Session Briefing\n\n- Prefer tests before refactors.\n- Finish callback migration.\n- API_KEY=do-not-inject\n",
                 encoding="utf-8",
             )
             proc = self.run_capture(
@@ -77,6 +73,17 @@ class CaptureEventTests(unittest.TestCase):
             self.assertNotIn("do-not-inject", context)
             self.assertIn("[REDACTED_SECRET]", context)
             self.assertLessEqual(len(context), 6000)
+
+    def test_session_start_does_not_generate_briefing_from_l2_memory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            journal = Path(tmp)
+            self.write_config(journal)
+            memory = journal / "memory"
+            memory.mkdir()
+            (memory / "user-profile.md").write_text("# User Collaboration Profile\n\n- Prefer small commits.\n")
+            proc = self.run_capture(journal, {"hook_event_name": "SessionStart"})
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertEqual(proc.stdout, "")
 
     def test_session_start_memory_injection_can_be_disabled(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -12,6 +12,12 @@
 - 自动 Git 同步：`${AUTO_SYNC}`
 - 外部实践雷达：`${RADAR}`
 
+## 记忆
+
+每日运行会自动维护记忆：L1 候选项在 `memory/candidates.yaml`，L2 操作型记忆在各 memory 文件中，L3 预计算 briefing 在 `memory/session-briefing.md`。
+
+Beta `SessionStart` 记忆注入默认关闭。启用后，hook 只读取预计算 briefing，重新脱敏并限制长度后再注入上下文。它不会在白天交互式 coding 时按需生成记忆。
+
 ## 常用操作
 
 ```bash

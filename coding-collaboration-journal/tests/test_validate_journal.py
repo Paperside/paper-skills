@@ -29,6 +29,7 @@ class JournalValidationTests(unittest.TestCase):
                 "--no-init-git",
                 "--no-auto-commit",
                 "--no-auto-push",
+                "--yes",
             ],
             text=True,
             stdout=subprocess.PIPE,

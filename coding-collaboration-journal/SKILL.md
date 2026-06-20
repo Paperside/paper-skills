@@ -18,17 +18,25 @@ Start with a plain-language explanation in the user's language:
 
 > This creates a private Git-backed record of how you and your coding agents work together. It quietly gathers relevant Codex and Claude Code sessions, repositories, changes, tests, and referenced resources; then writes evidence-linked daily reflections and maintains longer-term patterns and improvement experiments.
 
-Inspect the environment before asking questions. Infer what is safe to infer. Ask one compact grouped question only for unresolved choices:
+Inspect the environment before asking questions, but do not install yet. Inferred values are recommendations only; they are not user approval. Before running any command that writes files, initializes Git, installs hooks, renders an active scheduler, commits, or pushes, present a compact install plan and wait for explicit user confirmation.
+
+The pre-install plan must list every configurable item, available choices where relevant, the recommended default, and the detected/current value:
 
 1. journal repository local path and remote URL (or permission to create them);
 2. sources: Codex, Claude Code, or both;
 3. timezone and daily run time (default `02:00` local time, reporting the previous day);
 4. privacy level: `Low`, `Medium`, or `High` (recommend and default to `Low`);
 5. scheduler choice;
-6. automatic commit/push policy and external-practice radar cadence;
-7. Git author name/email only when automatic commits are selected and no effective identity is configured.
+6. automatic commit/push policy and remote sync target;
+7. hooks: disabled, user-scope, or project-scope;
+8. language template;
+9. external-practice radar cadence;
+10. memory settings, especially Beta `SessionStart` injection;
+11. Git author name/email only when automatic commits are selected and no effective identity is configured.
 
 When recommending **Codex Automations**, explicitly explain that project-scoped runs require the computer to be powered on, Codex to be running, and the selected project to remain available on disk. Let the user choose. If unavailable or unsuitable, offer the fallbacks in [Scheduler](references/scheduler.md).
+
+Use a status checklist before asking for approval, for example `✅ verified`, `❌ missing/action required`, and `ℹ️ needs confirmation`. The checklist must include environment readiness, repository location/name, remote sync decision and URL, scheduler, hooks, privacy, language, memory injection, and Git identity. Do not treat a recommendation as acceptance; the user must clearly confirm the plan.
 
 ## Modes
 
@@ -43,15 +51,16 @@ When recommending **Codex Automations**, explicitly explain that project-scoped 
 ## Install Workflow
 
 1. Read [Onboarding](references/onboarding.md) and inspect OS, Git, Codex, Claude Code, timezone, existing skills, settings, and candidate repository paths.
-2. Resolve the minimum configuration. Recommend `Low` privacy and Codex Automations, but never silently choose a scheduler that has operational conditions the user has not accepted.
-3. Run `scripts/bootstrap.py` to create or upgrade the journal repository scaffold. Preserve user edits and make upgrades idempotent.
-4. Configure selected source adapters using [Source Adapters](references/source-adapters.md). Merge hook settings; never overwrite unrelated hooks or settings.
-5. Configure the selected scheduler from [Scheduler](references/scheduler.md).
-6. Run a dry collection and generate a sample report for a real or synthetic date.
-7. Run `scripts/doctor.py`, `scripts/validate_journal.py`, and any repository tests.
-8. Show exactly what was installed, what could not be verified, and any operational conditions.
-9. Before automatic commits, verify an effective Git author identity; accept existing Git config or environment identity, and use repository-local `user.name`/`user.email` when the user supplies overrides.
-10. Commit and push only after validation. If a remote or credentials are unavailable, leave a clean local commit and exact next action.
+2. Present the pre-install checklist and install plan. Recommend `Low` privacy and Codex Automations, but never silently choose any repository path, remote sync target, scheduler, hook scope, Git sync policy, or memory injection setting.
+3. Wait for explicit user confirmation of the plan. If the user changes any material choice, show the revised plan before installing.
+4. Run `scripts/bootstrap.py --yes` to create or upgrade the journal repository scaffold. Preserve user edits and make upgrades idempotent. `--dry-run` may be used before approval, but any non-dry-run install requires `--yes`.
+5. Configure selected source adapters using [Source Adapters](references/source-adapters.md). Merge hook settings; never overwrite unrelated hooks or settings.
+6. Configure the selected scheduler from [Scheduler](references/scheduler.md).
+7. Run a dry collection and generate a sample report for a real or synthetic date.
+8. Run `scripts/doctor.py`, `scripts/validate_journal.py`, and any repository tests.
+9. Show exactly what was installed, what could not be verified, and any operational conditions.
+10. Before automatic commits, verify an effective Git author identity; accept existing Git config or environment identity, and use repository-local `user.name`/`user.email` when the user supplies overrides.
+11. Commit and push only after validation. If a remote or credentials are unavailable, leave a clean local commit and exact next action.
 
 ## Daily Operating Contract
 

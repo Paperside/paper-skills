@@ -16,7 +16,14 @@ BOOTSTRAP = ROOT / "scripts" / "bootstrap.py"
 
 
 class BootstrapTests(unittest.TestCase):
-    def run_bootstrap(self, output: Path, *extra: str, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+    def run_bootstrap(
+        self,
+        output: Path,
+        *extra: str,
+        env: dict[str, str] | None = None,
+        approved: bool = True,
+    ) -> subprocess.CompletedProcess[str]:
+        approval_args = ["--yes"] if approved else []
         return subprocess.run(
             [
                 sys.executable,
@@ -36,6 +43,7 @@ class BootstrapTests(unittest.TestCase):
                 "--no-init-git",
                 "--no-auto-commit",
                 "--no-auto-push",
+                *approval_args,
                 *extra,
             ],
             cwd=ROOT,
@@ -45,6 +53,23 @@ class BootstrapTests(unittest.TestCase):
             check=False,
             env=env,
         )
+
+    def test_bootstrap_requires_explicit_install_approval(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "journal"
+            result = self.run_bootstrap(output, approved=False)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("explicit user approval", result.stderr)
+            self.assertFalse(output.exists())
+
+    def test_bootstrap_dry_run_does_not_require_install_approval(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "journal"
+            result = self.run_bootstrap(output, "--dry-run", approved=False)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            payload = json.loads(result.stdout)
+            self.assertEqual(payload["root"], str(output.resolve()))
+            self.assertFalse(output.exists())
 
     def test_bootstrap_is_idempotent(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

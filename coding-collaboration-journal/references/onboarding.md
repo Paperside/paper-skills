@@ -2,11 +2,11 @@
 
 ## Conversation Style
 
-Use simple language and explain outcomes before implementation details. Do not interrogate the user one field at a time. Inspect first, then present inferred values and unresolved choices in one compact block.
+Use simple language and explain outcomes before implementation details. Do not interrogate the user one field at a time. Inspect first, then present detected values, configurable choices, recommended defaults, and required confirmations in one compact block.
 
 Example:
 
-> 我会给你建一个长期运行的 AI 编程协作日志：每天自动收集 Codex/Claude Code 会话、关联仓库和资源，写有证据引用的复盘，并维护长期模式与改进实验。下面这些我已经检测到了；只需要你确认没法安全推断的几项。
+> 我会给你建一个长期运行的 AI 编程协作日志：每天自动收集 Codex/Claude Code 会话、关联仓库和资源，写有证据引用的复盘，并维护长期模式与改进实验。下面是我检测到的环境、可配置项和推荐方案；你确认后我再开始安装。
 
 ## Silent Preflight
 
@@ -25,24 +25,45 @@ Inspect without asking:
 
 Do not print secret values while inspecting.
 
-## Required Choices
+## Required Pre-Install Confirmation
 
-Ask only what remains unresolved:
+Before installation, show the user all configurable choices. Detected values and recommended defaults are not approval. Do not create files, initialize Git, install hooks, render an active system scheduler, commit, or push until the user explicitly confirms the install plan.
 
 | Choice | Recommended default | Notes |
 |---|---|---|
 | Journal local path | `~/ai-collaboration-journal` | Prefer a dedicated repository. |
-| Remote | user's private/company personal Git repo | May create or attach an existing empty remote. |
+| Repository name | `ai-collaboration-journal` | Confirm separately from the parent directory. |
+| Remote sync | enabled when a private remote is available | User must confirm whether to sync remotely and the exact remote URL/repository. |
 | Sources | all detected tools | Support `codex`, `claude`, or both. |
 | Timezone | detected IANA zone | Never rely on a bare UTC offset for DST regions. |
 | Daily time | `02:00` | Report the previous calendar day. |
 | Privacy | `Low` | Full project context; credentials still removed. |
 | Scheduler | Codex Automation | Explain operational conditions before confirmation. |
 | Git sync | auto commit + push | Retry failures; never discard local artifacts. |
+| Hooks | user-scope when approved | User must confirm disabled/user-scope/project-scope before hook installation. |
 | Git author identity | existing Git identity | Ask only when automatic commits are selected and no effective identity exists; prefer a repository-local override when supplied. |
 | External radar | weekly, targeted | Not a broad daily search. |
 | Session memory injection | disabled | Beta opt-in; daily memory maintenance still runs automatically. |
 | Language | user's language | `zh*` and `en*` select matching README/AGENTS/CLAUDE/report/automation templates; unsupported tags fall back to English templates while generated prose follows config. Keep source identifiers unchanged. |
+
+## Approval Checklist
+
+Use a visible status checklist before asking for approval. Keep it concise, but include every item that can block or materially change the install:
+
+```text
+1. ✅ Codex environment verified: Codex is installed and readable.
+2. ✅ Claude Code environment verified: Claude Code session store detected.
+3. ❌ Python 3.11+ not found: this runtime requires Python 3.11 or newer; please confirm an interpreter path or install Python.
+4. ℹ️ Repository location pending: confirm parent directory, repository name, and whether to create or reuse a directory.
+5. ℹ️ Remote sync pending: recommended enabled; confirm exact remote URL or choose local-only.
+6. ℹ️ Sources pending: recommended codex,claude; confirm enabled sources.
+7. ℹ️ Schedule pending: recommended 02:00 in detected timezone; confirm time and scheduler.
+8. ℹ️ Hooks pending: confirm disabled, user-scope, or project-scope.
+9. ℹ️ Privacy pending: recommended Low; confirm Low/Medium/High.
+10. ℹ️ Git identity pending: confirm existing identity or provide repository-local name/email.
+```
+
+After the checklist, show the exact install command that will be run. The command must include `--yes` only after the user approves the plan. If any material choice changes, present the revised checklist before installing.
 
 ## Privacy Explanation
 

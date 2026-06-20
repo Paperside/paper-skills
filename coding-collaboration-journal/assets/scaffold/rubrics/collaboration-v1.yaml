@@ -1,0 +1,19 @@
+schema_version: 1
+id: collaboration-v1
+labels:
+  - not-assessable
+  - weak
+  - mixed
+  - strong
+dimensions:
+  - problem_framing
+  - context_organization
+  - decomposition_and_delegation
+  - correction_and_judgment
+  - verification_quality
+  - knowledge_externalization
+  - flow_and_rework
+requirements:
+  evidence_for_consequential_claims: true
+  counterevidence_for_longitudinal_patterns: true
+  daily_single_score: forbidden

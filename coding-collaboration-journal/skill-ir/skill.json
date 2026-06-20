@@ -1,0 +1,71 @@
+{
+  "id": "coding-collaboration-journal",
+  "schema_version": "0.1",
+  "name": "coding-collaboration-journal",
+  "job_to_be_done": "Create and operate an evidence-grounded, Git-backed, long-term record of a developer's collaboration with Codex and Claude Code.",
+  "triggers": [
+    "automatic daily Codex or Claude Code summary",
+    "AI coding work journal",
+    "long-term collaboration memory",
+    "personal growth analysis from coding-agent sessions",
+    "install or repair a scheduled engineering reflection workflow"
+  ],
+  "exclusions": [
+    "one-off summaries with no durable system requested",
+    "employee surveillance or comparative worker scoring",
+    "persisting credentials or authentication secrets"
+  ],
+  "inputs": [
+    "journal repository path and remote",
+    "selected coding-agent sources",
+    "timezone and schedule",
+    "privacy level",
+    "commit and push policy"
+  ],
+  "outputs": [
+    "runnable journal repository",
+    "daily evidence and report artifacts",
+    "weekly and monthly reviews",
+    "curated memory, patterns, and experiments",
+    "validated scheduler and source adapters"
+  ],
+  "workflow": [
+    "inspect",
+    "onboard",
+    "bootstrap",
+    "configure adapters",
+    "configure scheduler",
+    "smoke test",
+    "validate",
+    "commit and push",
+    "operate and evolve"
+  ],
+  "failure_modes": [
+    "collection failure mislabeled as no activity",
+    "settings overwritten instead of merged",
+    "scheduler assumed to work without smoke test",
+    "growth inferred from incomparable tasks",
+    "secret material persisted",
+    "model upgrades mistaken for user improvement"
+  ],
+  "resources": {
+    "references": "references/",
+    "scripts": "scripts/",
+    "assets": "assets/",
+    "evals": "evals/",
+    "reports": "reports/"
+  },
+  "evaluation": {
+    "trigger_cases": "evals/trigger-cases.jsonl",
+    "output_contract": "evals/output-contract.json"
+  },
+  "risk": {
+    "default_privacy": "Low",
+    "always_excluded": [
+      "credentials",
+      "private keys",
+      "authentication tokens"
+    ],
+    "durable_write_policy": "memory updates configurable; workflow changes evidence-backed"
+  }
+}

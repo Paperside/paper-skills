@@ -1,0 +1,15 @@
+{"id":"zh-install-codex","prompt":"帮我把每天和 Codex 做的工作自动沉淀成日报，记录聊天、仓库、提交和复盘，放进 Git 仓库长期维护。","expected":"trigger","mode":"install"}
+{"id":"zh-install-both","prompt":"我同时用 Codex 和 Claude Code，想搭一套每天凌晨两点自动总结并分析协作方式的系统。","expected":"trigger","mode":"install"}
+{"id":"zh-growth","prompt":"做一个能长期观察我怎么和 coding agent 协作、识别模式并提出改进实验的日志系统。","expected":"trigger","mode":"install"}
+{"id":"zh-daily","prompt":"运行今天的 AI 协作日报，补齐昨天的 Codex 和 Claude 会话上下文。","expected":"trigger","mode":"daily"}
+{"id":"zh-doctor","prompt":"为什么我的 AI 编程日志昨晚没有生成？检查 hook、automation 和 git push。","expected":"trigger","mode":"doctor"}
+{"id":"zh-privacy","prompt":"把我的协作日志从 Low 脱敏升级成 High，但保留设计思路。","expected":"trigger","mode":"evolve"}
+{"id":"zh-backfill","prompt":"把过去一周漏掉的 Claude Code 会话补录到长期协作档案里。","expected":"trigger","mode":"daily"}
+{"id":"en-install","prompt":"Set up a persistent Git-backed journal that summarizes my Codex and Claude Code work every night with evidence and long-term memory.","expected":"trigger","mode":"install"}
+{"id":"en-review","prompt":"Run the monthly review for my coding collaboration journal and compare similar task types.","expected":"trigger","mode":"monthly"}
+{"id":"en-note","prompt":"Add a correction to yesterday's AI collaboration report: the test failure was unrelated to the refactor.","expected":"trigger","mode":"note"}
+{"id":"negative-oneoff-summary","prompt":"Summarize this pasted conversation in three bullets.","expected":"no-trigger","reason":"one-off summary without durable system"}
+{"id":"negative-code-review","prompt":"Review this pull request for bugs and security issues.","expected":"no-trigger","reason":"ordinary coding review"}
+{"id":"negative-git-cron","prompt":"Write a cron expression that runs a shell script at 2 AM.","expected":"no-trigger","reason":"generic scheduler task"}
+{"id":"negative-personal-diary","prompt":"Help me write a personal gratitude diary entry for today.","expected":"no-trigger","reason":"not an AI coding collaboration journal"}
+{"id":"negative-memory-question","prompt":"What did I tell you my favorite editor was?","expected":"no-trigger","reason":"simple memory retrieval"}

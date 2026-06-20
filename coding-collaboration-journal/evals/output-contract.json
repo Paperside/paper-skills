@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "skill": "coding-collaboration-journal",
+  "assertions": [
+    {
+      "id": "explains-outcome-first",
+      "scope": "install",
+      "required": true,
+      "assertion": "The agent explains the journal in plain language before implementation details."
+    },
+    {
+      "id": "minimal-grouped-onboarding",
+      "scope": "install",
+      "required": true,
+      "assertion": "The agent inspects first and asks one compact grouped question only for unresolved choices."
+    },
+    {
+      "id": "privacy-default-low",
+      "scope": "install",
+      "required": true,
+      "assertion": "Low privacy is recommended by default and all three levels are explained accurately."
+    },
+    {
+      "id": "codex-automation-conditions",
+      "scope": "install",
+      "required": true,
+      "assertion": "Before choosing Codex Automation, the user is told the machine must be on, Codex running, and the project path available."
+    },
+    {
+      "id": "dual-provider-adapters",
+      "scope": "install",
+      "required": true,
+      "assertion": "Codex and Claude Code feed one normalized evidence and analysis pipeline."
+    },
+    {
+      "id": "idempotent-install",
+      "scope": "install",
+      "required": true,
+      "assertion": "Existing unrelated settings and user-modified managed files are preserved or surfaced as conflicts."
+    },
+    {
+      "id": "smoke-test-boundary",
+      "scope": "install",
+      "required": true,
+      "assertion": "Hooks, scheduler, readers, commit, and push are not called active without a smoke test or explicit missing-evidence status."
+    },
+    {
+      "id": "daily-evidence-first",
+      "scope": "daily",
+      "required": true,
+      "assertion": "Evidence is written before interpretive conclusions, and consequential claims cite stable evidence IDs."
+    },
+    {
+      "id": "activity-state-honesty",
+      "scope": "daily",
+      "required": true,
+      "assertion": "no-activity is used only when every enabled source completed collection; failures become incomplete-collection or partial-activity."
+    },
+    {
+      "id": "analysis-and-evaluation",
+      "scope": "daily",
+      "required": true,
+      "assertion": "Collaboration analysis and overall evaluation are always present; praise and improvement sections are evidence-gated."
+    },
+    {
+      "id": "bounded-memory",
+      "scope": "daily",
+      "required": true,
+      "assertion": "Long-term memory stores compact revisable patterns, counter-evidence, open loops, and experiments rather than transcript dumps."
+    },
+    {
+      "id": "targeted-web-radar",
+      "scope": "weekly",
+      "required": true,
+      "assertion": "External research is targeted by repeated friction, a new task class, a tool change, or an active experiment and favors primary sources."
+    },
+    {
+      "id": "like-for-like-growth",
+      "scope": "monthly",
+      "required": true,
+      "assertion": "Growth is evaluated across comparable task classes with model/tool/rubric epochs and uncertainty, not one daily score."
+    },
+    {
+      "id": "git-failure-recovery",
+      "scope": "daily",
+      "required": true,
+      "assertion": "A push failure preserves the local commit and records pending retry state."
+    }
+  ]
+}

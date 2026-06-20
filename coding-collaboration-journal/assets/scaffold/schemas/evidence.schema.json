@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/coding-collaboration-journal/evidence.schema.json",
+  "title": "Daily Evidence Pack",
+  "type": "object",
+  "required": ["schema_version", "report_date", "timezone", "status", "sources", "evidence"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1},
+    "report_date": {"type": "string", "format": "date"},
+    "timezone": {"type": "string", "minLength": 1},
+    "status": {"enum": ["active", "no-activity", "partial-activity", "incomplete-collection"]},
+    "sources": {"type": "object"},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "source", "kind", "occurred_at", "content_hash"],
+        "properties": {
+          "evidence_id": {"type": "string", "pattern": "^E-[A-Z0-9-]+$"},
+          "source": {"enum": ["codex", "claude", "git", "resource", "human"]},
+          "kind": {"type": "string"},
+          "occurred_at": {"type": "string"},
+          "content_hash": {"type": "string"}
+        }
+      }
+    }
+  }
+}

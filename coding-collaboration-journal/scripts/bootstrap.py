@@ -97,6 +97,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--install-hooks", action="store_true")
     parser.add_argument("--hook-scope", choices=("user", "project"), default="user")
     parser.add_argument("--hook-project", type=Path)
+    parser.add_argument(
+        "--yes",
+        "--approved-install-plan",
+        dest="approved_install_plan",
+        action="store_true",
+        help="Confirm that the user reviewed and approved the installation plan.",
+    )
     parser.add_argument("--force", action="store_true", help="Replace user-modified managed files")
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()
@@ -755,6 +762,13 @@ def main() -> int:
         runner = choose_runner(args.runner, sources)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
+
+    if not args.dry_run and not args.approved_install_plan:
+        raise SystemExit(
+            "Refusing to install without explicit user approval. Present the configurable install plan, "
+            "including local path, remote sync/URL, sources, privacy, scheduler, Git sync, hooks, "
+            "language, and memory injection; then re-run with --yes after the user confirms."
+        )
 
     root = args.output.expanduser().resolve()
     if not args.dry_run:

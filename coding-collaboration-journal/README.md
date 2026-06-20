@@ -101,7 +101,8 @@ python3 scripts/bootstrap.py \
   --timezone Asia/Shanghai \
   --run-time 02:00 \
   --git-user-name "AI Collaboration Journal" \
-  --git-user-email "journal@local.invalid"
+  --git-user-email "journal@local.invalid" \
+  --yes
 
 python3 /tmp/my-ai-journal/scripts/doctor.py --root /tmp/my-ai-journal
 python3 /tmp/my-ai-journal/scripts/validate_journal.py --root /tmp/my-ai-journal
@@ -121,4 +122,4 @@ python3 /tmp/my-ai-journal/scripts/validate_journal.py --root /tmp/my-ai-journal
 
 ## Boundaries
 
-The Skill can install, configure, validate, and repair the local journal system. It should never claim that hooks, schedulers, source readers, or remote Git push are active without a smoke test. When a client has no callable API for creating an automation, the Skill writes exact setup instructions and leaves the final UI confirmation to the user.
+The Skill can install, configure, validate, and repair the local journal system. Installation requires an explicit user-approved plan; `scripts/bootstrap.py` refuses non-dry-run installation without `--yes`. The Skill should never claim that hooks, schedulers, source readers, or remote Git push are active without a smoke test. When a client has no callable API for creating an automation, the Skill writes exact setup instructions and leaves the final UI confirmation to the user.

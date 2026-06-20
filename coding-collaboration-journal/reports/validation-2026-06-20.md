@@ -2,8 +2,8 @@
 
 ## Deterministic suite
 
-- 44 standard-library tests passed across 10 modules.
-- Coverage includes bootstrap/install upgrades, lightweight language template selection, self-contained deployed runtime prompts, Git identity and pending push behavior, Hook capture, default-off precomputed SessionStart memory injection, Claude JSONL discovery, Codex App Server pagination/fallback/continuous process cleanup, Git snapshots, privacy transforms, scheduler rendering, historical backfill selection, and daily artifact validation.
+- 46 standard-library tests passed across 10 modules.
+- Coverage includes bootstrap/install upgrades, explicit install approval gating, lightweight language template selection, self-contained deployed runtime prompts, Git identity and pending push behavior, Hook capture, default-off precomputed SessionStart memory injection, Claude JSONL discovery, Codex App Server pagination/fallback/continuous process cleanup, Git snapshots, privacy transforms, scheduler rendering, historical backfill selection, and daily artifact validation.
 - Python bytecode compilation passed for all scripts and tests.
 - `scripts/validate_skill.py .` passed with `0` errors and `0` warnings.
 

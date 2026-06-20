@@ -12,6 +12,12 @@ At `${DAILY_TIME}` in `${TIMEZONE}`, it reviews the previous day of Codex / Clau
 - Automatic Git sync: `${AUTO_SYNC}`
 - External practice radar: `${RADAR}`
 
+## Memory
+
+Daily runs maintain memory automatically: L1 candidates in `memory/candidates.yaml`, L2 operational memory files, and the precomputed L3 briefing in `memory/session-briefing.md`.
+
+Beta `SessionStart` memory injection is disabled by default. When enabled in `.journal/config.toml`, the hook reads only the precomputed briefing, redacts it again, and caps it before injecting context. It does not generate memory on demand during interactive coding.
+
 ## Common operations
 
 ```bash

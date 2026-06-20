@@ -59,8 +59,13 @@ class BootstrapTests(unittest.TestCase):
             self.assertIn('level = "Low"', (output / ".journal" / "config.toml").read_text())
             config_text = (output / ".journal" / "config.toml").read_text()
             self.assertIn("[memory]", config_text)
-            self.assertIn("inject_on_session_start = true", config_text)
+            self.assertIn("auto_update = true", config_text)
+            self.assertIn("status = \"beta\"", config_text)
+            self.assertIn("inject_on_session_start = false", config_text)
             self.assertIn("briefing_char_limit = 6000", config_text)
+            self.assertIn("briefing_hard_limit = 10000", config_text)
+            self.assertTrue((output / "memory" / "candidates.yaml").is_file())
+            self.assertTrue((output / "memory" / "session-briefing.md").is_file())
 
             manifest_before = (output / ".journal" / "install-manifest.json").read_bytes()
             scheduler_before = (output / ".journal" / "state" / "scheduler.json").read_bytes()
@@ -110,11 +115,38 @@ class BootstrapTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("This repository is a long-running", (output / "README.md").read_text())
             self.assertIn("## Daily conclusion", (output / "templates" / "report.md").read_text())
+            self.assertIn("# AI Collaboration Journal Instructions", (output / "AGENTS.md").read_text())
+            self.assertIn("Claude Code Adapter Notes", (output / "CLAUDE.md").read_text())
+            self.assertIn("# Daily Automation Prompt", (output / "automation" / "daily.md").read_text())
+            self.assertIn("# Weekly Automation Prompt", (output / "automation" / "weekly.md").read_text())
+            self.assertIn("# Monthly Automation Prompt", (output / "automation" / "monthly.md").read_text())
+
+    def test_default_chinese_templates_are_selected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "journal"
+            result = self.run_bootstrap(output)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("这是由", (output / "README.md").read_text())
+            self.assertIn("## 今日结论", (output / "templates" / "report.md").read_text())
+            self.assertIn("# AI 协作日志指令", (output / "AGENTS.md").read_text())
+            self.assertIn("Claude Code 适配说明", (output / "CLAUDE.md").read_text())
+            self.assertIn("# 每日自动化提示", (output / "automation" / "daily.md").read_text())
+            self.assertIn("# 每周自动化提示", (output / "automation" / "weekly.md").read_text())
+            self.assertIn("# 每月自动化提示", (output / "automation" / "monthly.md").read_text())
+
+    def test_unsupported_language_preserves_config_and_uses_english_runtime_templates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "journal"
+            result = self.run_bootstrap(output, "--language", "ja")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('language = "ja"', (output / ".journal" / "config.toml").read_text())
+            self.assertIn("This repository is a long-running", (output / "README.md").read_text())
+            self.assertIn("# Daily Automation Prompt", (output / "automation" / "daily.md").read_text())
 
     def test_deployed_runtime_prompts_are_self_contained(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp) / "journal"
-            result = self.run_bootstrap(output, "--scheduler", "codex-automation")
+            result = self.run_bootstrap(output, "--scheduler", "codex-automation", "--language", "en")
             self.assertEqual(result.returncode, 0, result.stderr)
 
             runtime_paths = [
@@ -135,6 +167,8 @@ class BootstrapTests(unittest.TestCase):
             self.assertIn(".journal/config.toml", daily)
             self.assertIn("docs/method/*", daily)
             self.assertIn("scripts/*", daily)
+            self.assertIn("memory/candidates.yaml", daily)
+            self.assertIn("memory/session-briefing.md", daily)
 
     def isolated_git_env(self, home: Path) -> dict[str, str]:
         env = os.environ.copy()

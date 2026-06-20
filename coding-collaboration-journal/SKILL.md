@@ -74,7 +74,9 @@ Follow [Daily Runtime](references/daily-runtime.md) and [Report Contract](refere
 Read [Memory Model](references/memory-model.md), [Analysis Method](references/analysis-method.md), and [External Practice Radar](references/external-practice-radar.md).
 
 - Treat memory as curated, revisable working knowledge—not a transcript dump.
-- Inject only a bounded, sanitized memory briefing at `SessionStart`; retrieve dated evidence when details matter.
+- Maintain memory candidates, operational memory, and the precomputed session briefing during scheduled report runs.
+- Treat Beta `SessionStart` injection as opt-in and disabled by default; when enabled, inject only the bounded, sanitized `memory/session-briefing.md`.
+- Retrieve dated evidence when details matter.
 - Promote a recurring pattern only after repeated evidence or one high-impact event.
 - Store counter-evidence and confidence alongside claims.
 - Turn improvement advice into bounded experiments with a hypothesis, intervention, metric, comparison set, and review date.

@@ -2,6 +2,8 @@
 
 Operate this installed journal repository in **weekly** mode. Treat the repository as the self-contained runtime: use `.journal/config.toml`, `AGENTS.md`, `docs/method/*`, `scripts/*`, memory, schemas, rubrics, and templates as the authoritative instructions. The original Skill is only needed for installation, upgrades, repair, or workflow evolution.
 
+Write generated prose in the configured `journal.language`; keep source identifiers, paths, commands, and evidence IDs unchanged.
+
 1. Read the previous completed local week, active memory, patterns, experiments, radar candidates, and report coverage.
 2. Consolidate repeated collaboration behaviors with counter-evidence. Do not promote a pattern solely because several daily reports paraphrased the same original event.
 3. Compare only similar task classes and note task difficulty, model/client/rubric epochs, and evidence confidence.

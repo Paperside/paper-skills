@@ -152,6 +152,15 @@ class JournalValidationTests(unittest.TestCase):
             findings = [item for item in result["findings"] if item["code"] == "secret-pattern"]
             self.assertFalse(findings, findings)
 
+    def test_precomputed_session_briefing_over_budget_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "journal"
+            self.scaffold(root)
+            self.write_day(root, "active")
+            (root / "memory" / "session-briefing.md").write_text("# Session Briefing\n\n" + ("x" * 10001), encoding="utf-8")
+            result = validate(root)
+            self.assertIn("memory-briefing-over-budget", {item["code"] for item in result["findings"]})
+
 
 if __name__ == "__main__":
     unittest.main()

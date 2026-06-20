@@ -2,8 +2,8 @@
 
 ## Deterministic suite
 
-- 40 standard-library tests passed across 10 modules.
-- Coverage includes bootstrap/install upgrades, self-contained deployed runtime prompts, Git identity and pending push behavior, Hook capture and SessionStart memory injection, Claude JSONL discovery, Codex App Server pagination/fallback/continuous process cleanup, Git snapshots, privacy transforms, scheduler rendering, historical backfill selection, and daily artifact validation.
+- 44 standard-library tests passed across 10 modules.
+- Coverage includes bootstrap/install upgrades, lightweight language template selection, self-contained deployed runtime prompts, Git identity and pending push behavior, Hook capture, default-off precomputed SessionStart memory injection, Claude JSONL discovery, Codex App Server pagination/fallback/continuous process cleanup, Git snapshots, privacy transforms, scheduler rendering, historical backfill selection, and daily artifact validation.
 - Python bytecode compilation passed for all scripts and tests.
 - `scripts/validate_skill.py .` passed with `0` errors and `0` warnings.
 
@@ -21,7 +21,7 @@ A generated journal was installed with:
 - additive user-scope Hooks;
 - Git initialization and automatic local commits.
 
-The smoke environment supplied a protocol-compatible Codex App Server fixture, a Claude Code JSONL session, Hook events, bounded memory, and a Git worktree. The collector produced:
+The smoke environment supplied a protocol-compatible Codex App Server fixture, a Claude Code JSONL session, Hook events, bounded memory, a precomputed session briefing, and a Git worktree. The collector produced:
 
 - status: `active`;
 - coverage: `complete`;
@@ -31,7 +31,7 @@ The smoke environment supplied a protocol-compatible Codex App Server fixture, a
 - five Hook events;
 - evidence-linked `report.md`, `evidence.json`, `run.json`, `collection.json`, and provider-native source artifacts.
 
-`validate_journal.py` returned `valid: true`, `errors: 0`, `warnings: 0`. A `SessionStart` event received a bounded memory briefing while a deliberately supplied credential assignment was replaced with `[REDACTED_SECRET]`. The durable repository contained none of the injected credential literals.
+`validate_journal.py` returned `valid: true`, `errors: 0`, `warnings: 0`. A `SessionStart` event received the precomputed bounded memory briefing only when injection was enabled, while a deliberately supplied credential assignment was replaced with `[REDACTED_SECRET]`. A separate test confirmed that SessionStart does not synthesize a briefing from L2 memory files. The durable repository contained none of the injected credential literals.
 
 A daily commit was created with message:
 

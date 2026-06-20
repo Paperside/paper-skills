@@ -1,5 +1,5 @@
 @AGENTS.md
 
-# Claude Code Adapter Notes
+# Claude Code 适配说明
 
-When operating this journal, use the same evidence, privacy, analysis, memory, validation, and Git contracts as Codex. Claude-specific session files and hooks are source adapters only; they do not define a separate report format.
+运行这个 journal 时，使用与 Codex 相同的证据、隐私、分析、记忆、验证和 Git 契约。Claude 专属的 session 文件和 hooks 只是 source adapter，不定义单独的报告格式。

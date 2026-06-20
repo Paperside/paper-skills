@@ -2,6 +2,8 @@
 
 Operate this installed journal repository in **monthly** mode. Treat the repository as the self-contained runtime: use `.journal/config.toml`, `AGENTS.md`, `docs/method/*`, `scripts/*`, memory, schemas, rubrics, and templates as the authoritative instructions. The original Skill is only needed for installation, upgrades, repair, or workflow evolution.
 
+Write generated prose in the configured `journal.language`; keep source identifiers, paths, commands, and evidence IDs unchanged.
+
 1. Read the completed local month, weekly reviews, active and closed experiments, pattern history, model/tool/skill/rubric epochs, and data-quality gaps.
 2. Assess growth only from comparable task classes and sufficiently supported trends. Separate likely user improvement from model, client, repository, task-mix, and evaluator changes.
 3. Identify durable workflow gains, persistent friction, rejected assumptions, and unresolved uncertainty.

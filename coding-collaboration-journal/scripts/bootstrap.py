@@ -49,6 +49,24 @@ RUNTIME_REFERENCES = [
     "analysis-method.md",
     "external-practice-radar.md",
 ]
+SCAFFOLD_LANGUAGE_FILES = {
+    "README.md": {
+        "zh": Path("README.md.tpl"),
+        "en": Path("README.en.md.tpl"),
+    },
+    "AGENTS.md": {
+        "zh": Path("AGENTS.md.tpl"),
+        "en": Path("AGENTS.en.md.tpl"),
+    },
+    "CLAUDE.md": {
+        "zh": Path("CLAUDE.md.tpl"),
+        "en": Path("CLAUDE.en.md.tpl"),
+    },
+    "templates/report.md": {
+        "zh": Path("templates/report.md"),
+        "en": Path("templates/report.en.md"),
+    },
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -232,10 +250,12 @@ def render_config(args: argparse.Namespace, sources: list[str], runner: str) -> 
         (
             "memory",
             {
+                "status": "beta",
                 "auto_update": True,
                 "write_approval": False,
-                "inject_on_session_start": True,
+                "inject_on_session_start": False,
                 "briefing_char_limit": 6000,
+                "briefing_hard_limit": 10000,
                 "candidate_repeat_threshold": 2,
                 "active_repeat_threshold": 3,
             },
@@ -271,6 +291,31 @@ def render_config(args: argparse.Namespace, sources: list[str], runner: str) -> 
 
 
 def scheduler_note(kind: str) -> str:
+    return scheduler_note_for_language(kind, "zh")
+
+
+def language_family(language: str) -> str:
+    normalized = (language or "").lower()
+    if normalized.startswith("zh"):
+        return "zh"
+    if normalized.startswith("en"):
+        return "en"
+    return "en"
+
+
+def scheduler_note_for_language(kind: str, language: str) -> str:
+    if language == "en":
+        if kind == "codex-automation":
+            return (
+                "Codex Automation (recommended): confirm the task in Codex. "
+                "For project-scoped runs, the computer must be powered on, Codex must be running, "
+                "and the journal repository path must remain available."
+            )
+        if kind == "claude-desktop":
+            return "Claude Desktop Scheduled Task: confirm the task in Desktop; the computer must be powered on."
+        if kind == "system":
+            return "System scheduler: run by launchd, systemd user timer, or Windows Task Scheduler."
+        return "No automatic scheduler is enabled; run python3 scripts/run_journal.py daily manually."
     if kind == "codex-automation":
         return (
             "Codex Automation（推荐）：需在 Codex 中完成任务确认。项目型任务运行时，"
@@ -294,6 +339,7 @@ def choose_runner(requested: str, sources: list[str]) -> str:
 
 
 def template_values(args: argparse.Namespace, sources: list[str]) -> dict[str, str]:
+    language = language_family(args.language)
     return {
         "JOURNAL_NAME": args.name,
         "DAILY_TIME": args.run_time,
@@ -303,41 +349,56 @@ def template_values(args: argparse.Namespace, sources: list[str]) -> dict[str, s
         "SCHEDULER": args.scheduler,
         "AUTO_SYNC": "commit + push" if args.auto_commit and args.auto_push else ("commit" if args.auto_commit else "manual"),
         "RADAR": args.radar,
-        "SCHEDULER_NOTE": scheduler_note(args.scheduler),
+        "SCHEDULER_NOTE": scheduler_note_for_language(args.scheduler, language),
     }
+
+
+def render_scaffold_file(source: Path, values: dict[str, str]) -> bytes:
+    text = source.read_text(encoding="utf-8")
+    if source.name.endswith(".tpl"):
+        text = Template(text).safe_substitute(values)
+    return text.encode("utf-8")
+
+
+def localized_prompt_path(prompt_name: str, language: str) -> Path:
+    prompt_root = SKILL_ROOT / "assets" / "prompts"
+    stem = Path(prompt_name).stem
+    if language == "zh":
+        candidate = prompt_root / f"{stem}.zh-CN.md"
+        if candidate.is_file():
+            return candidate
+    return prompt_root / prompt_name
 
 
 def collect_desired_files(args: argparse.Namespace, sources: list[str], runner: str) -> dict[str, bytes]:
     desired: dict[str, bytes] = {}
     values = template_values(args, sources)
+    language = language_family(args.language)
     scaffold = SKILL_ROOT / "assets" / "scaffold"
+    language_variant_sources = {
+        relative
+        for variants in SCAFFOLD_LANGUAGE_FILES.values()
+        for relative in variants.values()
+    }
 
     for source in scaffold.rglob("*"):
         if not source.is_file():
             continue
         relative = source.relative_to(scaffold)
-        # Language-specific template variants are selected below.
-        if relative.name in {"README.en.md.tpl", "report.en.md"}:
+        # Language-specific variants are selected after the generic scaffold copy.
+        if relative in language_variant_sources:
             continue
         target = relative
         if relative.name.endswith(".tpl"):
             target = relative.with_name(relative.name[:-4])
-        text = source.read_text(encoding="utf-8")
-        if relative.name.endswith(".tpl"):
-            text = Template(text).safe_substitute(values)
-        desired[target.as_posix()] = text.encode("utf-8")
+        desired[target.as_posix()] = render_scaffold_file(source, values)
 
-    language = args.language.lower()
-    if language.startswith("en"):
-        english_readme = scaffold / "README.en.md.tpl"
-        english_report = scaffold / "templates" / "report.en.md"
-        if english_readme.is_file():
-            desired["README.md"] = Template(english_readme.read_text(encoding="utf-8")).safe_substitute(values).encode("utf-8")
-        if english_report.is_file():
-            desired["templates/report.md"] = english_report.read_bytes()
+    for target, variants in SCAFFOLD_LANGUAGE_FILES.items():
+        selected = variants.get(language, variants["en"])
+        desired[target] = render_scaffold_file(scaffold / selected, values)
 
     for prompt_name in ("daily.md", "weekly.md", "monthly.md"):
-        desired[f"automation/{prompt_name}"] = (SKILL_ROOT / "assets" / "prompts" / prompt_name).read_bytes()
+        desired[f"automation/{prompt_name}"] = localized_prompt_path(prompt_name, language).read_bytes()
 
     for script_name in OPERATIONAL_SCRIPTS:
         desired[f"scripts/{script_name}"] = (SKILL_ROOT / "scripts" / script_name).read_bytes()

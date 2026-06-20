@@ -6,6 +6,18 @@ Let the system become more useful without turning every session into an ever-gro
 
 ## Memory Surfaces
 
+### `memory/candidates.yaml`
+
+Potential memory updates that are not yet durable knowledge:
+
+- new preference or workflow claims;
+- project continuity updates that need confirmation;
+- recurring friction or improvement opportunities;
+- stale facts that may need retirement;
+- rejected candidates with brief rationale when useful for avoiding churn.
+
+Daily runs review this file first, then promote, merge, reject, or stale candidates with evidence IDs, confidence, `first_seen`, and `last_seen` where applicable.
+
 ### `memory/user-profile.md`
 
 Stable or explicitly stated preferences:
@@ -84,6 +96,12 @@ Unfinished tasks with minimal recovery context:
 - next useful action;
 - expiration/staleness date.
 
+### `memory/session-briefing.md`
+
+The precomputed L3 briefing for optional `SessionStart` injection. It is regenerated during the daily run from maintained L1/L2 memory only. It should be compact, labeled as revisable context, and useful as navigation rather than proof.
+
+The target budget is `memory.briefing_char_limit` (default `6000`). The hard limit is `memory.briefing_hard_limit` (default `10000`). Daily maintenance should compact the briefing before finishing when it grows past the target budget, and validation rejects content beyond the hard limit.
+
 ## Automatic Memory Policy
 
 Safe automatic writes:
@@ -93,6 +111,8 @@ Safe automatic writes:
 - explicit user preferences;
 - new evidence attached to existing patterns;
 - experiment observations;
+- candidate promotion, rejection, merge, and staleness decisions;
+- regeneration or compaction of `memory/session-briefing.md`;
 - staleness markers.
 
 Default proposal-gated writes:
@@ -114,19 +134,22 @@ The user may configure a more autonomous policy, but every durable workflow muta
 - Distinguish “user said” from “system inferred”.
 - Do not store a personality diagnosis.
 - Do not interpret rest days as motivation or performance signals.
-- Periodically compact memory while retaining evidence pointers.
+- Compact memory during daily maintenance while retaining evidence pointers.
 
 ## Session-Start Briefing
 
-The installed `SessionStart` hook turns the bounded memory files into one compact briefing for both Codex and Claude Code. It is emitted through `hookSpecificOutput.additionalContext`, so the agent receives useful continuity without replaying raw history.
+Session-start memory injection is Beta and disabled by default. The hook never synthesizes memory from L2 files on demand. When `memory.inject_on_session_start = true`, it reads only the precomputed `memory/session-briefing.md`, sanitizes it, caps it, and emits it through `hookSpecificOutput.additionalContext`.
 
 Default behavior:
 
-- load only meaningful, non-placeholder memory surfaces;
+- maintain L1/L2/L3 memory automatically during the daily run;
+- regenerate `memory/session-briefing.md` during daily maintenance, even when injection is disabled;
+- inject nothing unless `memory.inject_on_session_start = true`;
+- load only meaningful, non-placeholder `memory/session-briefing.md`;
 - apply the selected privacy policy and mandatory credential redaction again;
-- cap the injected briefing at `memory.briefing_char_limit` (default `6000`, hard maximum `10000`);
+- cap the injected briefing at `memory.briefing_char_limit` as a last-resort runtime safety belt;
 - label the briefing as revisable context, not an instruction to override the current user or repository;
-- inject nothing when memory is empty or `memory.inject_on_session_start = false`.
+- inject nothing when the briefing is empty, placeholder-only, or disabled by configuration.
 
 The dated archive remains the source of truth. The briefing is a navigation and behavior aid, not evidence for a new claim.
 

@@ -47,7 +47,7 @@ def parse_time(value: str) -> tuple[int, int]:
 
 
 def command(root: Path) -> list[str]:
-    return [str(Path(sys.executable).resolve()), str((root / "scripts" / "run_journal.py").resolve()), "daily", "--root", str(root)]
+    return [str(Path(sys.executable).resolve()), str(root / "scripts" / "run_journal.py"), "daily", "--root", str(root)]
 
 
 def systemd_quote(value: str) -> str:

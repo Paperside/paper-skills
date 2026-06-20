@@ -61,6 +61,12 @@ my-ai-journal/
 
 The original Skill remains useful for installation, upgrade, repair, migration, and workflow evolution. Routine automation prompts treat the installed repository as the self-contained runtime.
 
+## Language Templates
+
+Installation supports lightweight template localization. `zh*` languages generate Chinese `README.md`, `AGENTS.md`, `CLAUDE.md`, report template, and automation prompts; `en*` languages generate English versions. Unsupported language tags keep the requested `journal.language` in config and fall back to English templates, so the scheduled agent can still write generated prose in the configured language.
+
+Method docs under `docs/method/` remain the canonical English runtime contract.
+
 ## Memory System And Beta Session Injection
 
 Daily runs maintain the memory system automatically:
@@ -107,6 +113,7 @@ python3 /tmp/my-ai-journal/scripts/validate_journal.py --root /tmp/my-ai-journal
 - Privacy: `Low`, with mandatory credential and authentication-secret removal.
 - Schedule: `02:00` local time, reporting the previous local calendar day.
 - Scheduler: Codex Automation when available, with clear local-runtime conditions and a manual smoke test before marking it active.
+- Language templates: Chinese for `zh*`, English for `en*` and unsupported tags.
 - Git: automatic commit by default; push policy follows user configuration.
 - External practice radar: targeted, not broad daily web research.
 - Memory maintenance: automatic during daily runs.

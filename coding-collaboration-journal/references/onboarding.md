@@ -42,7 +42,7 @@ Ask only what remains unresolved:
 | Git author identity | existing Git identity | Ask only when automatic commits are selected and no effective identity exists; prefer a repository-local override when supplied. |
 | External radar | weekly, targeted | Not a broad daily search. |
 | Session memory injection | disabled | Beta opt-in; daily memory maintenance still runs automatically. |
-| Language | user's language | Keep source identifiers unchanged. |
+| Language | user's language | `zh*` and `en*` select matching README/AGENTS/CLAUDE/report/automation templates; unsupported tags fall back to English templates while generated prose follows config. Keep source identifiers unchanged. |
 
 ## Privacy Explanation
 

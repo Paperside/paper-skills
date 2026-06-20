@@ -2,6 +2,8 @@
 
 Operate this installed journal repository in **daily** mode. Treat the repository as the self-contained runtime: use `.journal/config.toml`, `AGENTS.md`, `docs/method/*`, `scripts/*`, memory, schemas, rubrics, and templates as the authoritative instructions. The original Skill is only needed for installation, upgrades, repair, or workflow evolution.
 
+Write generated prose in the configured `journal.language`; keep source identifiers, paths, commands, and evidence IDs unchanged.
+
 1. Read `.journal/config.toml`, `AGENTS.md`, active memory, `memory/candidates.yaml`, `memory/session-briefing.md`, and `docs/method/daily-runtime.md` plus `docs/method/report-contract.md`.
 2. Compute the previous calendar day in the configured IANA timezone. Reconcile the configured recent days, but do not rewrite a validated historical report unless new evidence or a collector correction changes it.
 3. For each date that needs collection, run `python3 scripts/collect_day.py --root . --date YYYY-MM-DD --json`. Treat its `collection.json` and provider-native files under `sources/` as the collection baseline. Never call a source complete when the collector reports otherwise.
